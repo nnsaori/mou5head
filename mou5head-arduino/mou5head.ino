@@ -25,19 +25,19 @@ void setup()
   // Arduino-PC間用シリアルポートの設定
   Serial.begin(57600);
   while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
+    ;
   }
   // Bluetooth送受信用シリアルポートの設定
   bltSerial.begin(9600);
-  bltSerial.println("Hello, world?");
+  bltSerial.println("Hello, mou5head");
 }
 
 // アニメーションパターンリスト
 typedef void (*SimplePatternList[])();
 SimplePatternList gPatterns = { rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm };
 
-uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
-uint8_t gHue = 0;                  // rotating "base color" used by many of the patterns
+uint8_t gCurrentPatternNumber = 0;
+uint8_t gHue = 0;
 int     animation = 1;
 
 void loop()
@@ -85,7 +85,7 @@ void loop()
     gPatterns[gCurrentPatternNumber]();
     FastLED.show();
     FastLED.delay(1000/FRAMES_PER_SECOND);
-    EVERY_N_MILLISECONDS( 20 ) { gHue++; } // slowly cycle the "base color" through the rainbow
+    EVERY_N_MILLISECONDS( 20 ) { gHue++; }
   }
 }
 
@@ -93,7 +93,6 @@ void loop()
 
 void nextPattern()
 {
-  // add one to the current pattern number, and wrap around at the end
   gCurrentPatternNumber = (gCurrentPatternNumber + 1) % ARRAY_SIZE( gPatterns);
 }
 
@@ -149,13 +148,11 @@ void setPurple(){
 
 void rainbow() 
 {
-  // FastLED's built-in rainbow generator
   fill_rainbow( leds, NUM_LEDS, gHue, 7);
 }
 
 void rainbowWithGlitter() 
 {
-  // built-in FastLED rainbow, plus some random sparkly glitter
   rainbow();
   addGlitter(80);
 }
@@ -169,7 +166,6 @@ void addGlitter( fract8 chanceOfGlitter)
 
 void confetti() 
 {
-  // random colored speckles that blink in and fade smoothly
   fadeToBlackBy( leds, NUM_LEDS, 10);
   int pos = random16(NUM_LEDS);
   leds[pos] += CHSV( gHue + random8(64), 200, 255);
@@ -177,7 +173,6 @@ void confetti()
 
 void sinelon()
 {
-  // a colored dot sweeping back and forth, with fading trails
   fadeToBlackBy( leds, NUM_LEDS, 20);
   int pos = beatsin16(13,0,NUM_LEDS);
   leds[pos] += CHSV( gHue, 255, 192);
@@ -185,7 +180,6 @@ void sinelon()
 
 void bpm()
 {
-  // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
   uint8_t BeatsPerMinute = 62;
   CRGBPalette16 palette = PartyColors_p;
   uint8_t beat = beatsin8( BeatsPerMinute, 64, 255);
@@ -195,7 +189,6 @@ void bpm()
 }
 
 void juggle() {
-  // eight colored dots, weaving in and out of sync with each other
   fadeToBlackBy( leds, NUM_LEDS, 20);
   byte dothue = 0;
   for( int i = 0; i < 8; i++) {
